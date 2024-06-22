@@ -2,6 +2,16 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#define RESET   "\x1b[0m"
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define WHITE   "\x1b[37m"
+#define BOLD    "\x1b[1m"
+
 #define IN 1
 #define OUT 0
 
@@ -11,6 +21,14 @@ int wc = 0, cc = 0;
 int state = OUT;
 char command[256];
 FILE *inFile;
+
+void print_grid(char **argv, int nl, int wc, int cc) {
+
+    printf(BOLD "\n-> CRACKD %s\n\n", argv[1]);
+    printf(BOLD WHITE "%-15s %-15s %-15s\n" RESET, "Lines", "Words", "Characters");
+    printf(BOLD WHITE "%-15s %-15s %-15s\n" RESET, "-----", "-----", "----------");
+    printf(BOLD GREEN "%-15d" RESET BOLD YELLOW " %-15d" RESET BOLD CYAN " %-15d\n\n" RESET, nl, wc, cc);
+}
 
 int main(int argc, char **argv)
 {
@@ -47,13 +65,11 @@ int main(int argc, char **argv)
             state = IN;
             ++wc;
         }
-
-        printf("%c", c);
     }
-        
-        printf("\nLines: %d\n", nl);
-        printf("Words: %d\n", wc);
-        printf("Characters: %d\n", cc);
+    
+    fclose(inFile);
+  
+    print_grid(argv, nl, wc, cc);
 
     return 0;
 }
