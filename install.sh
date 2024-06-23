@@ -4,21 +4,21 @@ PROGRAM_NAME="crackd"
 CONFIG_FILE="crackd.cnf"
 
 if [[ ! -d /etc/$PROGRAM_NAME ]]; then
-	mkdir /etc/$PROGRAM_NAME
+	sudo mkdir /etc/$PROGRAM_NAME
 fi
 
 if [[ ! -f /etc/$PROGRAM_NAME ]]; then
 	cp $PROGRAM_NAME /etc/$PROGRAM_NAME
-	chmod +x /etc/$PROGRAM_NAME/$PROGRAM_NAME
+	sudo chmod +x /etc/$PROGRAM_NAME/$PROGRAM_NAME
 fi
 
 if [[ ! -f /etc/$PROGRAM_NAME/$CONFIG_FILE ]]; then
-	echo "TEXT_EDITOR=vim" >> /etc/$PROGRAM_NAME/$CONFIG_FILE
+	sudo echo "TEXT_EDITOR=vim" >> /etc/$PROGRAM_NAME/$CONFIG_FILE
 fi
 
-grep -Fxq "export PATH=/etc/crackd:\$PATH" "/etc/$PROGRAM_NAME/$CONFIG_FILE"
+sudo grep -Fxq "export PATH=/etc/crackd:\$PATH" "/etc/$PROGRAM_NAME/$CONFIG_FILE"
 if [[ $? -ne 0 ]]; then
-	echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
+	sudo echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
 fi
 
-exec ~/.bashrc
+sudo exec ~/.bashrc
