@@ -19,3 +19,5 @@ grep -Fxq "export PATH=/etc/crackd:\$PATH" "/etc/$PROGRAM_NAME/$CONFIG_FILE"
 if [[ $? -eq 1 ]]; then
 	echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
 fi
+
+source ~/.bashrc
