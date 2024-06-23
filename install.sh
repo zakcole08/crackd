@@ -17,7 +17,7 @@ if [[ ! -f /etc/$PROGRAM_NAME/$CONFIG_FILE ]]; then
 fi
 
 grep -Fxq "export PATH=/etc/crackd:\$PATH" "/etc/$PROGRAM_NAME/$CONFIG_FILE"
-if [[ $? -eq 1 ]]; then
+if [[ $? -ne 0 ]]; then
 	echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
 fi
 
