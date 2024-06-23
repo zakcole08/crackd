@@ -9,6 +9,7 @@ fi
 
 if [[ ! -f /etc/$PROGRAM_NAME ]]; then
 	cp $PROGRAM_NAME /etc/$PROGRAM_NAME
+	chmod +x /etc/$PROGRAM_NAME/$PROGRAM_NAME
 fi
 
 if [[ ! -f /etc/$PROGRAM_NAME/$CONFIG_FILE ]]; then
@@ -20,4 +21,4 @@ if [[ $? -eq 1 ]]; then
 	echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
 fi
 
-source ~/.bashrc
+exec ~/.bashrc
