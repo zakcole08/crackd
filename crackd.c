@@ -15,6 +15,7 @@
 
 #define IN 1
 #define OUT 0
+#define PROGRAM_LOCATION "/etc/crackd"
 
 int c;
 int nl1 = 0, wc1 = 0, cc1 = 0;
@@ -29,14 +30,14 @@ FILE *config_file;
 
 void config()
 {
-    while (access(".crackd.cnf", F_OK) != 0)
+    if (access(PROGRAM_LOCATION"/crackd.cnf", F_OK) != 0)
     {
-        fopen(".crackd.cnf", "w");
+        config_file = fopen(PROGRAM_LOCATION"/crackd.cnf", "w");
         fprintf(config_file, "TEXT_EDITOR=vim\n");
         fclose(config_file);
     }
     
-    config_file = fopen(".crackd.cnf", "r");
+    config_file = fopen(PROGRAM_LOCATION"/crackd.cnf", "r");
     if (config_file == NULL)
     {
         fprintf(stderr, "Could not open config file\n");
@@ -59,7 +60,7 @@ void config()
     printf("Enter name of your preferred text editor: ");
     scanf("%255s", editor);
      
-    config_file = fopen(".crackd.cnf", "w");
+    config_file = fopen(PROGRAM_LOCATION"/crackd.cnf", "w");
     if (config_file == NULL)
     {
         fprintf(stderr, "Could not open config file for writing\n");
