@@ -27,13 +27,54 @@ char line[256];
 FILE *in_file;
 FILE *config_file;
 
+void config()
+{
+    while (access(".crackd.cnf", F_OK) != 0)
+    {
+        fopen(".crackd.cnf", "w");
+        fprintf(config_file, "TEXT_EDITOR=vim\n");
+        fclose(config_file);
+    }
+    
+    config_file = fopen(".crackd.cnf", "r");
+    if (config_file == NULL)
+    {
+        fprintf(stderr, "Could not open config file\n");
+        exit(1);
+    }
+
+    while (fgets(line, sizeof(line), config_file) != NULL)
+    {
+        if (strncmp(line, "TEXT_EDITOR=", 12) == 0)
+        {
+            strncpy(editor, line + 12, sizeof(editor) - 1);
+            editor[strcspn(editor, "\n")] = '\0';
+            fclose(config_file);
+            return;
+        }
+    }
+    
+    fclose(config_file);
+    
+    printf("Enter name of your preferred text editor: ");
+    scanf("%255s", editor);
+     
+    config_file = fopen(".crackd.cnf", "w");
+    if (config_file == NULL)
+    {
+        fprintf(stderr, "Could not open config file for writing\n");
+        exit(1);
+    }
+    fprintf(config_file, "TEXT_EDITOR=%s", editor);
+    fclose(config_file);
+}
+
 int get_stats(char **argv, int *nl, int *wc, int *cc)
 {
     in_file = fopen(argv[1], "r");
     
     if (in_file == NULL)
     {
-        fprintf(stderr, "Cannot open file for reading: %s\n", argv[1]);
         return 2;
     }
 
@@ -76,9 +117,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    config();
+
     get_stats(argv, &nl1, &wc1, &cc1);
 
-    snprintf(command, sizeof(command), "vim %s", argv[1]);
+    snprintf(command, sizeof(command), "%s %s", editor, argv[1]);
     int result = system(command);
     if (result != 0)
     {
