@@ -21,4 +21,4 @@ if [[ $? -ne 0 ]]; then
 	sudo echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
 fi
 
-sudo exec ~/.bashrc
+exec ~/.bashrc
