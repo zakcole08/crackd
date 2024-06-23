@@ -9,4 +9,4 @@ Installation complete!
 
 USAGE
 -----
-Usage: crackd <filename>
+Usage: crackd [filename]
