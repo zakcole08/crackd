@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 #define RESET   "\x1b[0m"
 #define RED     "\x1b[31m"
@@ -21,7 +22,43 @@ int nl2 = 0, wc2 = 0, cc2 = 0;
 int nl = 0, wc = 0, cc = 0;
 int state = OUT;
 char command[256];
-FILE *inFile;
+char editor[254];
+char line[256];
+FILE *in_file;
+FILE *config_file;
+
+int get_stats(char **argv, int *nl, int *wc, int *cc)
+{
+    in_file = fopen(argv[1], "r");
+    
+    if (in_file == NULL)
+    {
+        fprintf(stderr, "Cannot open file for reading: %s\n", argv[1]);
+        return 2;
+    }
+
+    while ((c = fgetc(in_file)) != EOF)
+    {
+        ++(*cc);
+
+        if (c == '\n')
+        {
+            ++(*nl);
+        }
+
+        if (c == '\n' || c == '\t' || c == ' ')
+        {
+            state = OUT;
+        }
+        else if (state == OUT)
+        {
+            state = IN;
+            ++(*wc);
+        }
+    }
+    
+    fclose(in_file);
+}
 
 void print_grid(char **argv, int nl, int wc, int cc) {
 
@@ -31,75 +68,15 @@ void print_grid(char **argv, int nl, int wc, int cc) {
     printf(BOLD GREEN "%-15d" RESET BOLD YELLOW " %-15d" RESET BOLD CYAN " %-15d\n\n" RESET, nl, wc, cc);
 }
 
-int get_initial_stats(char **argv)
-{
-    inFile = fopen(argv[1], "r");
-    
-    if (inFile == NULL)
-    {
-        fprintf(stderr, "Cannot open file for reading: %s\n", argv[1]);
-        return 2;
-    }
-
-    while ((c = fgetc(inFile)) != EOF)
-    {
-        ++cc1;
-
-        if (c == '\n')
-        {
-            ++nl1;
-        }
-
-        if (c == '\n' || c == '\t' || c == ' ')
-        {
-            state = OUT;
-        }
-        else if (state == OUT)
-        {
-            state = IN;
-            ++wc1;
-        }
-    }
-    
-    fclose(inFile);
-}
-
-int get_final_stats(char **argv)
-{
-    inFile = fopen(argv[1], "r");
-    
-    if (inFile == NULL)
-    {
-        fprintf(stderr, "Cannot open file for reading: %s\n", argv[1]);
-        return 2;
-    }
-
-    while ((c = fgetc(inFile)) != EOF)
-    {
-        ++cc2;
-
-        if (c == '\n')
-        {
-            ++nl2;
-        }
-
-        if (c == '\n' || c == '\t' || c == ' ')
-        {
-            state = OUT;
-        }
-        else if (state == OUT)
-        {
-            state = IN;
-            ++wc2;
-        }
-    }
-    
-    fclose(inFile);
-}
-
 int main(int argc, char **argv)
 {
-    get_initial_stats(argv);
+    if (argc < 2)
+    {
+        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+        return 1;
+    }
+
+    get_stats(argv, &nl1, &wc1, &cc1);
 
     snprintf(command, sizeof(command), "vim %s", argv[1]);
     int result = system(command);
@@ -108,7 +85,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    get_final_stats(argv);
+    get_stats(argv, &nl2, &wc2, &cc2);
     nl = nl2 - nl1;
     wc = wc2 - wc1;
     cc = cc2 - cc1;
