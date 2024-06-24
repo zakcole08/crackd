@@ -22,4 +22,9 @@ if [[ $? -ne 0 ]]; then
         sudo echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
 fi
 
+sudo grep -Fxq "alias vim=crackd" "/home/$USER/.bashrc"
+if [[ $? -ne 0 ]]; then
+    sudo echo "alias vim=crackd" >> ~/.bashrc
+fi
+
 exec bash
