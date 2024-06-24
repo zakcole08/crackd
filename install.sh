@@ -17,7 +17,7 @@ if [[ ! -f /etc/$PROGRAM_NAME/$CONFIG_FILE ]]; then
         echo "TEXT_EDITOR=vim" | tee /etc/$PROGRAM_NAME/$CONFIG_FILE
 fi
 
-sudo grep -Fxq "export PATH=/etc/crackd:\$PATH" "/etc/$PROGRAM_NAME/$CONFIG_FILE"
+sudo grep -Fxq "export PATH=/etc/crackd:\$PATH" "/home/$USER/.bashrc"
 if [[ $? -ne 0 ]]; then
         sudo echo "export PATH=/etc/crackd:\$PATH" >> ~/.bashrc
 fi
