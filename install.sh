@@ -24,7 +24,7 @@ fi
 
 sudo grep -Fxq "alias vim=crackd" "/home/$USER/.bashrc"
 if [[ $? -ne 0 ]]; then
-    sudo echo "alias vim=crackd" >> ~/.bashrc
+    sudo echo "alias vim=crackd" >> ~/.bashrc        # Probably want to make this optional
 fi
 
 exec bash
