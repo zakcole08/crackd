@@ -9,5 +9,5 @@ Installation complete!
 
 USAGE
 -----
-Usage e.g: crackd [filename]
+Usage e.g: crackd [filename]<br>
            vim [filename]
